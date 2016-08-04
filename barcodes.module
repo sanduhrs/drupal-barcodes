@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains barcodes.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function barcodes_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the barcodes module.
+    case 'help.page.barcodes':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Generate Barcodes') . '</p>';
+      return $output;
+
+    default:
+  }
+}
