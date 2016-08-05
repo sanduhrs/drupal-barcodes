@@ -2,12 +2,12 @@
 
 namespace Drupal\barcodes\Plugin\Field\FieldFormatter;
 
+use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
-use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 
 /**
  * Plugin implementation of the 'barcode' formatter.

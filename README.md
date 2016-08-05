@@ -7,9 +7,12 @@ Install dependencies with composer from your webroot:
 
 ## Configure
 
-* Add a field of the the types email, link, string, telephone, text
+* Add a field of one of the types of email, link, string, telephone, text
 * Choose Barcode as formatter
 * Adjust the settings like type, color and dimensions to your liking
+
+Alternatively you can:
+* Add a Barcode block anywhere to your site with per block Barcode configuration
 
 ## Warning
 
