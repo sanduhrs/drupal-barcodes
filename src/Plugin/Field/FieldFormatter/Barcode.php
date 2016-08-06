@@ -148,12 +148,14 @@ class Barcode extends FormatterBase {
         ];
       }
       catch (\Exception $e) {
-        $elements[$delta] = [
-          '#markup' => $this->t('Error: @error, given: @value', [
+        $logger_factory = \Drupal::service('logger.factory');
+        $logger_factory->get('Barcodes')->error(
+          'Error: @error, given: @value',
+          [
             '@error' => $e->getMessage(),
             '@value' => $this->viewValue($item),
-          ]),
-        ];
+          ]
+        );
       }
     }
     return $elements;
