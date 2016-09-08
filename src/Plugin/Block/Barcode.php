@@ -208,7 +208,9 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       ];
     }
     catch (\Exception $e) {
-      $this->loggerFactory->get('Barcodes')->error(
+      /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
+      $logger = $this->loggerFactory->get('barcodes');
+      $logger->error(
         'Error: @error, given: @value',
         [
           '@error' => $e->getMessage(),

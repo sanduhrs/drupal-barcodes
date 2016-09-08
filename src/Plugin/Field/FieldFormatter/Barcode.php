@@ -164,8 +164,9 @@ class Barcode extends FormatterBase {
         ];
       }
       catch (\Exception $e) {
-        $logger_factory = \Drupal::service('logger.factory');
-        $logger_factory->get('Barcodes')->error(
+        /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
+        $logger = \Drupal::service('logger.factory')->get('barcodes');
+        $logger->error(
           'Error: @error, given: @value',
           [
             '@error' => $e->getMessage(),
