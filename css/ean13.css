@@ -4,14 +4,14 @@
  */
 
 .barcode-ean13 .code {
-    padding-left: 0.7em;
+  padding-left: 0.7em;
 }
 .barcode-ean13 .value {
-    margin-top: -1.2em;
-    font-family: monospace;
-    font-size: 1.1em;
-    letter-spacing: 0em;
+  margin-top: -1.2em;
+  font-family: monospace;
+  font-size: 1.1em;
+  letter-spacing: 0em;
 }
 .barcode-ean13 .slice {
-    background-color: white;
+  background-color: white;
 }
