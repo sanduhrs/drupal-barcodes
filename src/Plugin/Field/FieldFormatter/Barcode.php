@@ -131,6 +131,28 @@ class Barcode extends FormatterBase {
     $elements = [];
     $generator = new BarcodeGenerator();
     foreach ($items as $delta => $item) {
+      $suffix = str_replace(
+        '+', 'plus', strtolower($this->getSetting('type'))
+      );
+      $elements[$delta] = [
+        '#theme' => 'barcode__' . $suffix,
+        '#attached' => [
+          'library' => [
+            'barcodes/' . $suffix,
+          ],
+        ],
+        '#type' => $this->getSetting('type'),
+        '#value' => $this->viewValue($item),
+        '#width' => $this->getSetting('width'),
+        '#height' => $this->getSetting('height'),
+        '#color' => $this->getSetting('color'),
+        '#padding_top' => $this->getSetting('padding_top'),
+        '#padding_right' => $this->getSetting('padding_right'),
+        '#padding_bottom' => $this->getSetting('padding_bottom'),
+        '#padding_left' => $this->getSetting('padding_left'),
+        '#show_value' => $this->getSetting('show_value'),
+      ];
+
       try {
         $barcode = $generator->getBarcodeObj(
           $this->getSetting('type'),
@@ -145,23 +167,7 @@ class Barcode extends FormatterBase {
             $this->getSetting('padding-left'),
           ]
         );
-        $template = 'barcode__' . str_replace(
-            '+', 'plus', strtolower($this->getSetting('type'))
-          );
-        $elements[$delta] = [
-          '#theme' => $template,
-          '#svg' => $barcode->getSvgCode(),
-          '#type' => $this->getSetting('type'),
-          '#value' => $this->viewValue($item),
-          '#width' => $this->getSetting('width'),
-          '#height' => $this->getSetting('height'),
-          '#color' => $this->getSetting('color'),
-          '#padding_top' => $this->getSetting('padding_top'),
-          '#padding_right' => $this->getSetting('padding_right'),
-          '#padding_bottom' => $this->getSetting('padding_bottom'),
-          '#padding_left' => $this->getSetting('padding_left'),
-          '#show_value' => $this->getSetting('show_value'),
-        ];
+        $elements[$delta]['#svg'] = $barcode->getSvgCode();
       }
       catch (\Exception $e) {
         /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
