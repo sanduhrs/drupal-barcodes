@@ -20,11 +20,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal\Core\Logger\LoggerChannelFactory definition.
+   * The logger.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
-  protected $loggerFactory;
+  protected $logger;
 
   /**
    * Construct.
@@ -45,7 +45,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       LoggerChannelFactory $logger_factory
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->loggerFactory = $logger_factory;
+    $this->logger = $logger_factory->get('barcodes');
   }
 
   /**
@@ -215,9 +215,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       $build['barcode']['#svg'] = $barcode->getSvgCode();
     }
     catch (\Exception $e) {
-      /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
-      $logger = $this->loggerFactory->get('barcodes');
-      $logger->error(
+      $this->logger->error(
         'Error: @error, given: @value',
         [
           '@error' => $e->getMessage(),
