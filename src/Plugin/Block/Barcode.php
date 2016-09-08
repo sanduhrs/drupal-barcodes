@@ -212,7 +212,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
           $this->configuration['padding_left'],
         ]
       );
-      $build['#svg'] = $barcode->getSvgCode();
+      $build['barcode']['#svg'] = $barcode->getSvgCode();
     }
     catch (\Exception $e) {
       /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
