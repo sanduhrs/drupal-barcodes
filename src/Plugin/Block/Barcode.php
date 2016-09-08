@@ -74,10 +74,11 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       'color' => '#000000',
       'height' => 100,
       'width' => 100,
-      'padding_top' => 10,
-      'padding_right' => 10,
-      'padding_bottom' => 10,
-      'padding_left' => 10,
+      'padding_top' => 0,
+      'padding_right' => 0,
+      'padding_bottom' => 0,
+      'padding_left' => 0,
+      'show_value' => FALSE,
     ] + parent::defaultConfiguration();
   }
 
@@ -151,6 +152,12 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       '#default_value' => $this->configuration['padding_left'],
       '#description' => $this->t('The left padding in pixels'),
     ];
+    $form['show_value'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show value'),
+      '#default_value' => $this->configuration['show_value'],
+      '#description' => $this->t('Show the actual value in addition to the barcode'),
+    ];
     return $form;
   }
 
@@ -182,13 +189,22 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
           $this->configuration['padding_left'],
         ]
       );
-      $svg = $barcode->getSvgCode();
+      $template = 'barcode__' . str_replace(
+        '+', 'plus', strtolower($this->configuration['type'])
+      );
       $build['barcode'] = [
-        '#type' => 'inline_template',
-        '#template' => "{{ svg|raw }}",
-        '#context' => [
-          'svg' => $svg,
-        ],
+        '#theme' => $template,
+        '#svg' => $barcode->getSvgCode(),
+        '#type' => $this->configuration['type'],
+        '#value' => $this->configuration['value'],
+        '#width' => $this->configuration['width'],
+        '#height' => $this->configuration['height'],
+        '#color' => $this->configuration['color'],
+        '#padding_top' => $this->configuration['padding_top'],
+        '#padding_right' => $this->configuration['padding_right'],
+        '#padding_bottom' => $this->configuration['padding_bottom'],
+        '#padding_left' => $this->configuration['padding_left'],
+        '#show_value' => $this->configuration['show_value'],
       ];
     }
     catch (\Exception $e) {

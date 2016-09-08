@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 
 /**
  * Implements hook_help().
@@ -21,4 +22,32 @@ function barcodes_help($route_name, RouteMatchInterface $route_match) {
 
     default:
   }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function barcodes_theme($existing, $type, $theme, $path) {
+  $generator = new BarcodeGenerator();
+  $barcode = [
+      'variables' => [
+        'svg' => NULL,
+        'type' => NULL,
+        'value' => NULL,
+        'width' => NULL,
+        'height' => NULL,
+        'color' => NULL,
+        'padding_top' => NULL,
+        'padding_right' => NULL,
+        'padding_bottom' => NULL,
+        'padding_left' => NULL,
+        'show_value' => NULL,
+      ],
+  ];
+  $items = [];
+  $items['barcode'] = $barcode;
+  foreach ($generator->getTypes() as $type) {
+    $items['barcode__' . strtolower($type)] = $barcode;
+  }
+  return $items;
 }

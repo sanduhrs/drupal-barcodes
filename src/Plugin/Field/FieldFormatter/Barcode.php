@@ -35,10 +35,11 @@ class Barcode extends FormatterBase {
       'color' => '#000000',
       'height' => 100,
       'width' => 100,
-      'padding_top' => 10,
-      'padding_right' => 10,
-      'padding_bottom' => 10,
-      'padding_left' => 10,
+      'padding_top' => 0,
+      'padding_right' => 0,
+      'padding_bottom' => 0,
+      'padding_left' => 0,
+      'show_value' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -106,6 +107,12 @@ class Barcode extends FormatterBase {
       '#default_value' => $this->getSetting('padding_left'),
       '#description' => $this->t('The left padding in pixels'),
     ];
+    $settings['show_value'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show value'),
+      '#default_value' => $this->getSetting['show_value'],
+      '#description' => $this->t('Show the actual value in addition to the barcode'),
+    ];
     return $settings + parent::settingsForm($form, $form_state);
   }
 
@@ -138,13 +145,22 @@ class Barcode extends FormatterBase {
             $this->getSetting('padding-left'),
           ]
         );
-        $svg = $barcode->getSvgCode();
+        $template = 'barcode__' . str_replace(
+            '+', 'plus', strtolower($this->configuration['type'])
+          );
         $elements[$delta] = [
-          '#type' => 'inline_template',
-          '#template' => "{{ svg|raw }}",
-          '#context' => [
-            'svg' => $svg,
-          ],
+          '#theme' => $template,
+          '#svg' => $barcode->getSvgCode(),
+          '#type' => $this->getSetting['type'],
+          '#value' => $this->viewValue($item),
+          '#width' => $this->getSetting['width'],
+          '#height' => $this->getSetting['height'],
+          '#color' => $this->getSetting['color'],
+          '#padding_top' => $this->getSetting['padding_top'],
+          '#padding_right' => $this->getSetting['padding_right'],
+          '#padding_bottom' => $this->getSetting['padding_bottom'],
+          '#padding_left' => $this->getSetting['padding_left'],
+          '#show_value' => $this->getSetting['show_value'],
         ];
       }
       catch (\Exception $e) {
