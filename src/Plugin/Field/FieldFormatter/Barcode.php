@@ -110,7 +110,7 @@ class Barcode extends FormatterBase {
     $settings['show_value'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show value'),
-      '#default_value' => $this->getSetting['show_value'],
+      '#default_value' => $this->getSetting('show_value'),
       '#description' => $this->t('Show the actual value in addition to the barcode'),
     ];
     return $settings + parent::settingsForm($form, $form_state);
@@ -146,21 +146,21 @@ class Barcode extends FormatterBase {
           ]
         );
         $template = 'barcode__' . str_replace(
-            '+', 'plus', strtolower($this->configuration['type'])
+            '+', 'plus', strtolower($this->getSetting('type'))
           );
         $elements[$delta] = [
           '#theme' => $template,
           '#svg' => $barcode->getSvgCode(),
-          '#type' => $this->getSetting['type'],
+          '#type' => $this->getSetting('type'),
           '#value' => $this->viewValue($item),
-          '#width' => $this->getSetting['width'],
-          '#height' => $this->getSetting['height'],
-          '#color' => $this->getSetting['color'],
-          '#padding_top' => $this->getSetting['padding_top'],
-          '#padding_right' => $this->getSetting['padding_right'],
-          '#padding_bottom' => $this->getSetting['padding_bottom'],
-          '#padding_left' => $this->getSetting['padding_left'],
-          '#show_value' => $this->getSetting['show_value'],
+          '#width' => $this->getSetting('width'),
+          '#height' => $this->getSetting('height'),
+          '#color' => $this->getSetting('color'),
+          '#padding_top' => $this->getSetting('padding_top'),
+          '#padding_right' => $this->getSetting('padding_right'),
+          '#padding_bottom' => $this->getSetting('padding_bottom'),
+          '#padding_left' => $this->getSetting('padding_left'),
+          '#show_value' => $this->getSetting('show_value'),
         ];
       }
       catch (\Exception $e) {
