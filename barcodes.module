@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains barcodes.module..
+ * Contains barcodes.module.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -47,7 +47,10 @@ function barcodes_theme($existing, $type, $theme, $path) {
   $items = [];
   $items['barcode'] = $barcode;
   foreach ($generator->getTypes() as $type) {
-    $items['barcode__' . strtolower($type)] = $barcode;
+    $suffix = str_replace(
+      '+', 'plus', strtolower($type)
+    );
+    $items['barcode__' . $suffix] = $barcode;
   }
   return $items;
 }
