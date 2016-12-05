@@ -129,6 +129,7 @@ class Barcode extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
+    $token_service = \Drupal::token();
     $generator = new BarcodeGenerator();
     foreach ($items as $delta => $item) {
       $suffix = str_replace(
@@ -142,7 +143,9 @@ class Barcode extends FormatterBase {
           ],
         ],
         '#type' => $this->getSetting('type'),
-        '#value' => $this->viewValue($item),
+        '#value' => $token_service->replace(
+          $this->viewValue($item)
+        ),
         '#width' => $this->getSetting('width'),
         '#height' => $this->getSetting('height'),
         '#color' => $this->getSetting('color'),

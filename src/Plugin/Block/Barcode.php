@@ -93,7 +93,15 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       '#title' => $this->t('Value'),
       '#description' => $this->t('The Barcode value.'),
       '#default_value' => $this->configuration['value'],
+      '#element_validate' => ['token_element_validate'],
+      '#token_types' => [],
     ];
+    if (\Drupal::moduleHandler()->moduleExists('token')) {
+      $form['token_help'] = [
+        '#theme' => 'token_tree_link',
+        '#token_types' => [],
+      ];
+    }
     $form['type'] = [
       '#type' => 'select',
       '#title' => $this->t('Barcode Type'),
@@ -101,12 +109,12 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       '#options' => array_combine($generator->getTypes(), $generator->getTypes()),
       '#default_value' => $this->configuration['type'],
     ];
-    $form['color'] = array(
+    $form['color'] = [
       '#type' => 'color',
       '#title' => $this->t('Color'),
       '#default_value' => $this->configuration['color'],
       '#description' => $this->t('The color code.'),
-    );
+    ];
     $form['height'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Height'),
@@ -175,6 +183,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     $build = [];
+    $token_service = \Drupal::token();
     $generator = new BarcodeGenerator();
     $suffix = str_replace(
       '+', 'plus', strtolower($this->configuration['type'])
@@ -187,7 +196,9 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
         ],
       ],
       '#type' => $this->configuration['type'],
-      '#value' => $this->configuration['value'],
+      '#value' => $token_service->replace(
+        $this->configuration['value']
+      ),
       '#width' => $this->configuration['width'],
       '#height' => $this->configuration['height'],
       '#color' => $this->configuration['color'],
