@@ -17,10 +17,13 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Barcode"),
  *   field_types = {
  *     "email",
+ *     "integer",
  *     "link",
  *     "string",
  *     "telephone",
- *     "text"
+ *     "text",
+ *     "text_long",
+ *     "text_with_summary",
  *   }
  * )
  */
