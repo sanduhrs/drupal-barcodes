@@ -188,6 +188,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
     $suffix = str_replace(
       '+', 'plus', strtolower($this->configuration['type'])
     );
+    $value = $token_service->replace($this->configuration['value']);
     $build['barcode'] = [
       '#theme' => 'barcode__' . $suffix,
       '#attached' => [
@@ -196,9 +197,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
         ],
       ],
       '#type' => $this->configuration['type'],
-      '#value' => $token_service->replace(
-        $this->configuration['value']
-      ),
+      '#value' => $value,
       '#width' => $this->configuration['width'],
       '#height' => $this->configuration['height'],
       '#color' => $this->configuration['color'],
@@ -212,7 +211,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
     try {
       $barcode = $generator->getBarcodeObj(
         $this->configuration['type'],
-        $this->configuration['value'],
+        $value,
         $this->configuration['width'],
         $this->configuration['height'],
         $this->configuration['color'],
