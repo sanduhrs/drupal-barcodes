@@ -58,12 +58,12 @@ class Barcode extends FormatterBase {
       '#options' => array_combine($generator->getTypes(), $generator->getTypes()),
       '#default_value' => $this->getSetting('type'),
     ];
-    $settings['color'] = array(
+    $settings['color'] = [
       '#type' => 'color',
       '#title' => $this->t('Color'),
       '#default_value' => $this->getSetting('color'),
       '#description' => $this->t('The color code.'),
-    );
+    ];
     $settings['height'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Height'),
@@ -123,7 +123,7 @@ class Barcode extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary[] = t('Type: %type', array('%type' => $this->getSetting('type')));
+    $summary[] = t('Type: %type', ['%type' => $this->getSetting('type')]);
     return $summary;
   }
 

@@ -35,7 +35,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
-   * @param LoggerChannelFactory $logger_factory
+   * @param Drupal\Core\Logger\LoggerChannelFactory $logger_factory
    *   The logger factory.
    */
   public function __construct(

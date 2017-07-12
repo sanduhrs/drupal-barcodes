@@ -30,19 +30,19 @@ function barcodes_help($route_name, RouteMatchInterface $route_match) {
 function barcodes_theme($existing, $type, $theme, $path) {
   $generator = new BarcodeGenerator();
   $barcode = [
-      'variables' => [
-        'svg' => NULL,
-        'type' => NULL,
-        'value' => NULL,
-        'width' => NULL,
-        'height' => NULL,
-        'color' => NULL,
-        'padding_top' => NULL,
-        'padding_right' => NULL,
-        'padding_bottom' => NULL,
-        'padding_left' => NULL,
-        'show_value' => NULL,
-      ],
+    'variables' => [
+      'svg' => NULL,
+      'type' => NULL,
+      'value' => NULL,
+      'width' => NULL,
+      'height' => NULL,
+      'color' => NULL,
+      'padding_top' => NULL,
+      'padding_right' => NULL,
+      'padding_bottom' => NULL,
+      'padding_left' => NULL,
+      'show_value' => NULL,
+    ],
   ];
   $items = [];
   $items['barcode'] = $barcode;
