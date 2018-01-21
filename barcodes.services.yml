@@ -1,0 +1,4 @@
+services:
+  logger.channel.barcodes:
+    parent: logger.channel_base
+    arguments: ['barcodes']

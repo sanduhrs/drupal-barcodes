@@ -5,8 +5,8 @@ namespace Drupal\barcodes\Plugin\Block;
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The logger.
+   * A logger instance.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
@@ -35,17 +35,21 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
-   * @param Drupal\Core\Logger\LoggerChannelFactory $logger_factory
-   *   The logger factory.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
   public function __construct(
       array $configuration,
       $plugin_id,
       $plugin_definition,
-      LoggerChannelFactory $logger_factory
+      LoggerInterface $logger
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->logger = $logger_factory->get('barcodes');
+    parent::__construct(
+      $configuration,
+      $plugin_id,
+      $plugin_definition
+    );
+    $this->logger = $logger;
   }
 
   /**
@@ -61,7 +65,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('logger.factory')
+      $container->get('logger.channel.barcodes')
     );
   }
 
