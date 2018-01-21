@@ -97,10 +97,12 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       '#title' => $this->t('Value'),
       '#description' => $this->t('The Barcode value.'),
       '#default_value' => $this->configuration['value'],
-      '#element_validate' => ['token_element_validate'],
-      '#token_types' => [],
     ];
     if (\Drupal::moduleHandler()->moduleExists('token')) {
+      $form['value'] = [
+        '#element_validate' => ['token_element_validate'],
+        '#token_types' => [],
+      ];
       $form['token_help'] = [
         '#theme' => 'token_tree_link',
         '#token_types' => [],
