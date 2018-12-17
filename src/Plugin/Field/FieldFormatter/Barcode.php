@@ -138,6 +138,19 @@ class Barcode extends FormatterBase {
       $suffix = str_replace(
         '+', 'plus', strtolower($this->getSetting('type'))
       );
+
+      // Get information about the currently loaded entity from the route.
+      $routeParameters = \Drupal::routeMatch()->getParameters();
+      if ($routeParameters->count() > 0) {
+        // We use the first parameter as dynamic indicator for the entity type.
+        $entity_type_indicator = $routeParameters->keys()[0];
+        $entity = \Drupal::routeMatch()->getParameter($entity_type_indicator);
+        $has_entity = FALSE;
+        if (is_object($entity) && $entity instanceof \Drupal\Core\Entity\ContentEntityInterface) {
+          $has_entity = TRUE;
+        }
+      }
+
       $elements[$delta] = [
         '#theme' => 'barcode__' . $suffix,
         '#attached' => [
@@ -147,7 +160,8 @@ class Barcode extends FormatterBase {
         ],
         '#type' => $this->getSetting('type'),
         '#value' => $token_service->replace(
-          $this->viewValue($item)
+          $this->viewValue($item),
+          $has_entity ? [$entity->getEntityType()->id() => $entity] : []
         ),
         '#width' => $this->getSetting('width'),
         '#height' => $this->getSetting('height'),
