@@ -4,6 +4,7 @@ namespace Drupal\barcodes\Plugin\Field\FieldFormatter;
 
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -146,7 +147,7 @@ class Barcode extends FormatterBase {
         $entity_type_indicator = $routeParameters->keys()[0];
         $entity = \Drupal::routeMatch()->getParameter($entity_type_indicator);
         $has_entity = FALSE;
-        if (is_object($entity) && $entity instanceof \Drupal\Core\Entity\ContentEntityInterface) {
+        if (is_object($entity) && $entity instanceof ContentEntityInterface) {
           $has_entity = TRUE;
         }
       }
