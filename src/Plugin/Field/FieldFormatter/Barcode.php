@@ -124,7 +124,7 @@ class Barcode extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary[] = t('Type: %type', ['%type' => $this->getSetting('type')]);
+    $summary[] = $this->t('Type: %type', ['%type' => $this->getSetting('type')]);
     return $summary;
   }
 
