@@ -4,6 +4,7 @@ namespace Drupal\barcodes\Plugin\Block;
 
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Psr\Log\LoggerInterface;
@@ -101,11 +102,11 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
     if (\Drupal::moduleHandler()->moduleExists('token')) {
       $form['value'] += [
         '#element_validate' => ['token_element_validate'],
-        '#token_types' => [],
+        '#token_types' => ['node'],
       ];
       $form['token_help'] = [
         '#theme' => 'token_tree_link',
-        '#token_types' => [],
+        '#token_types' => ['node'],
       ];
     }
     $form['type'] = [
@@ -194,7 +195,17 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
     $suffix = str_replace(
       '+', 'plus', strtolower($this->configuration['type'])
     );
-    $value = $token_service->replace($this->configuration['value']);
+
+    $tokens = [];
+    $parameters = \Drupal::routeMatch()->getParameters();
+    foreach ($parameters as $parameter) {
+      if ($parameter instanceof EntityInterface) {
+        $tokens[$parameter->getEntityTypeId()] = $parameter;
+      }
+    }
+
+    $value = $token_service->replace($this->configuration['value'], $tokens);
+
     $build['barcode'] = [
       '#theme' => 'barcode__' . $suffix,
       '#attached' => [

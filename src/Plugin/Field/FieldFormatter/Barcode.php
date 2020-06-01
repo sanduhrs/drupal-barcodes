@@ -140,17 +140,12 @@ class Barcode extends FormatterBase {
         '+', 'plus', strtolower($this->getSetting('type'))
       );
 
-      // Get information about the currently loaded entity from the route.
-      $routeParameters = \Drupal::routeMatch()->getParameters();
-      if ($routeParameters->count() > 0) {
-        // We use the first parameter as dynamic indicator for the entity type.
-        $entity_type_indicator = $routeParameters->keys()[0];
-        $entity = \Drupal::routeMatch()->getParameter($entity_type_indicator);
-        $has_entity = FALSE;
-        if (is_object($entity) && $entity instanceof ContentEntityInterface) {
-          $has_entity = TRUE;
-        }
+      $tokens = [];
+      if ($entity = $items->getEntity()) {
+        $tokens[$entity->getEntityTypeId()] = $entity;
       }
+
+      $value = $token_service->replace($this->viewValue($item), $tokens);
 
       $elements[$delta] = [
         '#theme' => 'barcode__' . $suffix,
@@ -160,10 +155,7 @@ class Barcode extends FormatterBase {
           ],
         ],
         '#type' => $this->getSetting('type'),
-        '#value' => $token_service->replace(
-          $this->viewValue($item),
-          $has_entity ? [$entity->getEntityType()->id() => $entity] : []
-        ),
+        '#value' => $value,
         '#width' => $this->getSetting('width'),
         '#height' => $this->getSetting('height'),
         '#color' => $this->getSetting('color'),
@@ -177,7 +169,7 @@ class Barcode extends FormatterBase {
       try {
         $barcode = $generator->getBarcodeObj(
           $this->getSetting('type'),
-          $this->viewValue($item),
+          $value,
           $this->getSetting('width'),
           $this->getSetting('height'),
           $this->getSetting('color'),
