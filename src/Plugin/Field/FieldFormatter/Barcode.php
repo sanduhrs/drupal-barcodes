@@ -3,8 +3,6 @@
 namespace Drupal\barcodes\Plugin\Field\FieldFormatter;
 
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
-use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -36,6 +34,7 @@ class Barcode extends FormatterBase {
   public static function defaultSettings() {
     return [
       'type' => 'QRCODE',
+      'format' => 'SVG',
       'color' => '#000000',
       'height' => 100,
       'width' => 100,
@@ -58,6 +57,19 @@ class Barcode extends FormatterBase {
       '#description' => $this->t('The Barcode type.'),
       '#options' => array_combine($generator->getTypes(), $generator->getTypes()),
       '#default_value' => $this->getSetting('type'),
+    ];
+    $settings['format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Display Format'),
+      '#description' => $this->t('The display format, e.g. png, svg, jpg.'),
+      '#options' => [
+        'PNG' => 'PNG Image',
+        'SVG' => 'SVG Image',
+        'HTMLDIV' => 'HTML DIV',
+        'UNICODE' => 'Unicode String',
+        'BINARY' => 'Binary String',
+      ],
+      '#default_value' => $this->getSetting('format'),
     ];
     $settings['color'] = [
       '#type' => 'color',
@@ -124,7 +136,7 @@ class Barcode extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary[] = $this->t('Type: %type', ['%type' => $this->getSetting('type')]);
+    $summary[] = $this->t('Type: %type </br> Display format: %format', ['%type' => $this->getSetting('type'), '%format' => $this->getSetting('format')]);
     return $summary;
   }
 
@@ -180,7 +192,13 @@ class Barcode extends FormatterBase {
             $this->getSetting('padding-left'),
           ]
         );
+        $elements[$delta]['#format'] = $this->getSetting('format');
         $elements[$delta]['#svg'] = $barcode->getSvgCode();
+        $elements[$delta]['#png'] = "<img alt=\"Embedded Image\" src=\"data:image/png;base64," . base64_encode($barcode->getPngData()) . "\" />";
+        $elements[$delta]['#htmldiv'] = $barcode->getHtmlDiv();
+        $elements[$delta]['#unicode'] = "<pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">" . $barcode->getGrid(json_decode('"\u00A0"'), json_decode('"\u2584"')) . "</pre>";
+        $elements[$delta]['#binary'] = "<pre style=\"font-family:monospace;\">" . $barcode->getGrid() . "</pre>";
+        $elements[$delta]['#barcode'] = $elements[$delta]['#' . strtolower($this->getSetting('format'))];
       }
       catch (\Exception $e) {
         /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */

@@ -31,8 +31,8 @@ function barcodes_theme($existing, $type, $theme, $path) {
   $generator = new BarcodeGenerator();
   $barcode = [
     'variables' => [
-      'svg' => NULL,
       'type' => NULL,
+      'format' => NULL,
       'value' => NULL,
       'width' => NULL,
       'height' => NULL,
@@ -42,6 +42,12 @@ function barcodes_theme($existing, $type, $theme, $path) {
       'padding_bottom' => NULL,
       'padding_left' => NULL,
       'show_value' => NULL,
+      'svg' => NULL,
+      'png' => NULL,
+      'htmldiv' => NULL,
+      'unicode' => NULL,
+      'binary' => NULL,
+      'barcode' => NULL,
     ],
   ];
   $items = [];

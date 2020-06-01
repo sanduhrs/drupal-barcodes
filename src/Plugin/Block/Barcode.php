@@ -76,6 +76,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
   public function defaultConfiguration() {
     return [
       'type' => 'QRCODE',
+      'format' => 'SVG',
       'value' => '',
       'color' => '#000000',
       'height' => 100,
@@ -115,6 +116,19 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       '#description' => $this->t('The Barcode type.'),
       '#options' => array_combine($generator->getTypes(), $generator->getTypes()),
       '#default_value' => $this->configuration['type'],
+    ];
+    $form['format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Display Format'),
+      '#description' => $this->t('The display format, e.g. png, svg, jpg.'),
+      '#options' => [
+        'PNG' => 'PNG Image',
+        'SVG' => 'SVG Image',
+        'HTMLDIV' => 'HTML DIV',
+        'UNICODE' => 'Unicode String',
+        'BINARY' => 'Binary String',
+      ],
+      '#default_value' => $this->configuration['format'],
     ];
     $form['color'] = [
       '#type' => 'color',
@@ -239,7 +253,13 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
           $this->configuration['padding_left'],
         ]
       );
+      $build['barcode']['#format'] = $this->configuration['format'];
       $build['barcode']['#svg'] = $barcode->getSvgCode();
+      $build['barcode']['#png'] = "<img alt=\"Embedded Image\" src=\"data:image/png;base64," . base64_encode($barcode->getPngData()) . "\" />";
+      $build['barcode']['#htmldiv'] = $barcode->getHtmlDiv();
+      $build['barcode']['#unicode'] = "<pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">" . $barcode->getGrid(json_decode('"\u00A0"'), json_decode('"\u2584"')) . "</pre>";
+      $build['barcode']['#binary'] = "<pre style=\"font-family:monospace;\">" . $barcode->getGrid() . "</pre>";
+      $build['barcode']['#barcode'] = $build['barcode']['#' . strtolower($this->configuration['format'])];
     }
     catch (\Exception $e) {
       $this->logger->error(
