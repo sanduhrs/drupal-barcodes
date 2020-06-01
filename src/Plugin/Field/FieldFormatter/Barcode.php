@@ -215,7 +215,13 @@ class Barcode extends FormatterBase {
    *   The textual output generated.
    */
   protected function viewValue(FieldItemInterface $item) {
-    return Html::escape($item->value);
+    if ($item->mainPropertyName()) {
+      $value = $item->__get($item->mainPropertyName());
+    }
+    else {
+      $value = $item->getValue();
+    }
+    return $value;
   }
 
 }
