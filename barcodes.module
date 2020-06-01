@@ -42,6 +42,7 @@ function barcodes_theme($existing, $type, $theme, $path) {
       'padding_bottom' => NULL,
       'padding_left' => NULL,
       'show_value' => NULL,
+      'extended_value' => NULL,
       'svg' => NULL,
       'png' => NULL,
       'htmldiv' => NULL,

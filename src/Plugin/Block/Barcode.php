@@ -260,6 +260,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       $build['barcode']['#unicode'] = "<pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">" . $barcode->getGrid(json_decode('"\u00A0"'), json_decode('"\u2584"')) . "</pre>";
       $build['barcode']['#binary'] = "<pre style=\"font-family:monospace;\">" . $barcode->getGrid() . "</pre>";
       $build['barcode']['#barcode'] = $build['barcode']['#' . strtolower($this->configuration['format'])];
+      $build['barcode']['#extended_value'] = $barcode->getExtendedCode();
     }
     catch (\Exception $e) {
       $this->logger->error(

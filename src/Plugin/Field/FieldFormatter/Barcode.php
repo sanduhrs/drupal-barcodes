@@ -199,6 +199,7 @@ class Barcode extends FormatterBase {
         $elements[$delta]['#unicode'] = "<pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">" . $barcode->getGrid(json_decode('"\u00A0"'), json_decode('"\u2584"')) . "</pre>";
         $elements[$delta]['#binary'] = "<pre style=\"font-family:monospace;\">" . $barcode->getGrid() . "</pre>";
         $elements[$delta]['#barcode'] = $elements[$delta]['#' . strtolower($this->getSetting('format'))];
+        $elements[$delta]['#extended_value'] = $barcode->getExtendedCode();
       }
       catch (\Exception $e) {
         /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
