@@ -3,13 +3,15 @@
 namespace Drupal\barcodes\Template;
 
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Class Barcode.
  *
  * @package Drupal\barcodes\Template
  */
-class Barcode extends \Twig_Extension {
+class Barcode extends AbstractExtension {
 
   /**
    * {@inheritdoc}
@@ -23,7 +25,7 @@ class Barcode extends \Twig_Extension {
    */
   public function getFilters() {
     return [
-      new \Twig_SimpleFilter(
+      new TwigFilter(
         'barcode',
         [
           $this,
