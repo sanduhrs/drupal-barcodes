@@ -23,6 +23,7 @@ use Drupal\Core\Form\FormStateInterface;
  *     "text",
  *     "text_long",
  *     "text_with_summary",
+ *     "bigint",
  *   }
  * )
  */
