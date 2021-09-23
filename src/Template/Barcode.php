@@ -3,6 +3,7 @@
 namespace Drupal\barcodes\Template;
 
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
+use Drupal\Core\Utility\Token;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -12,6 +13,23 @@ use Twig\TwigFilter;
  * @package Drupal\barcodes\Template
  */
 class Barcode extends AbstractExtension {
+
+  /**
+   * The token service.
+   *
+   * @var \Drupal\Core\Utility\Token
+   */
+  protected $token;
+
+  /**
+   * Constructs a Barcode Twig extension.
+   *
+   * @param \Drupal\Core\Utility\Token $token
+   *   The token service.
+   */
+  public function __construct(Token $token) {
+    $this->token = $token;
+  }
 
   /**
    * {@inheritdoc}
@@ -71,7 +89,7 @@ class Barcode extends AbstractExtension {
     $value = (string) $value;
 
     $generator = new BarcodeGenerator();
-    $value = \Drupal::token()->replace($value);
+    $value = $this->token->replace($value);
 
     $barcode = $generator->getBarcodeObj(
       $type,
