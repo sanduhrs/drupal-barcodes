@@ -1,5 +1,6 @@
 # Barcodes
-The Barcodes module provides a field formatter to display various field types as rendered Barcodes.
+The Barcodes module provides a field formatter to display various field types as
+rendered Barcodes.
 
 **Available Barcodes**
 * C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9
@@ -46,15 +47,17 @@ Enable the module
     > drush en barcodes
 
 ## Configuration
-* Add a field of one of the types of email, integer, link, string, telephone, text, text_long or text_with_summary
+* Add a field of one of the types of email, integer, link, string, telephone,
+* text, text_long or text_with_summary
 * Choose Barcode as formatter
 * Adjust the settings like type, color and dimensions to your liking
 
 ## Optional dependencies
-* [Composer manager](https://drupal.org/project/composer_manager) (Drupal 7.x)  
+* [Composer manager](https://drupal.org/project/composer_manager) (Drupal 7.x)
   You may use composer manager module to manage external dependencies.
-* [Token](https://drupal.org/project/token) (Drupal 7.x / 8.x)  
-  You may use Token module, if you need token replacement functionality in your barcode data.
+* [Token](https://drupal.org/project/token) (Drupal 7.x / 8.x)
+  You may use Token module, if you need token replacement functionality in your
+  barcode data.
 
 ## Dependencies
 * No further system dependencies, just PHP and Drupal
