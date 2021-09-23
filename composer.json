@@ -12,5 +12,8 @@
     },
     "require": {
         "tecnickcom/tc-lib-barcode": "^1"
+    },
+    "require-dev": {
+        "drupal/token": "^1"
     }
 }
