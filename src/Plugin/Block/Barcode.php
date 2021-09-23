@@ -5,8 +5,11 @@ namespace Drupal\barcodes\Plugin\Block;
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Utility\Token;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -28,6 +31,27 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
   protected $logger;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The token service.
+   *
+   * @var \Drupal\Core\Utility\Token
+   */
+  protected $token;
+
+  /**
+   * The currently active route match object.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * Construct.
    *
    * @param array $configuration
@@ -38,12 +62,21 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin implementation definition.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Utility\Token $token
+   *   The token service.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The currently active route match object.
    */
   public function __construct(
       array $configuration,
       $plugin_id,
       $plugin_definition,
-      LoggerInterface $logger
+      LoggerInterface $logger,
+      ModuleHandlerInterface $module_handler,
+      Token $token,
+      RouteMatchInterface $route_match
   ) {
     parent::__construct(
       $configuration,
@@ -51,6 +84,9 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       $plugin_definition
     );
     $this->logger = $logger;
+    $this->moduleHandler = $module_handler;
+    $this->token = $token;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -66,7 +102,10 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('logger.channel.barcodes')
+      $container->get('logger.channel.barcodes'),
+      $container->get('module_handler'),
+      $container->get('token'),
+      $container->get('current_route_match')
     );
   }
 
@@ -100,7 +139,7 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
       '#description' => $this->t('The Barcode value.'),
       '#default_value' => $this->configuration['value'],
     ];
-    if (\Drupal::moduleHandler()->moduleExists('token')) {
+    if ($this->moduleHandler->moduleExists('token')) {
       $form['value'] += [
         '#element_validate' => ['token_element_validate'],
         '#token_types' => ['node'],
@@ -204,21 +243,20 @@ class Barcode extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     $build = [];
-    $token_service = \Drupal::token();
     $generator = new BarcodeGenerator();
     $suffix = str_replace(
       '+', 'plus', strtolower($this->configuration['type'])
     );
 
     $tokens = [];
-    $parameters = \Drupal::routeMatch()->getParameters();
+    $parameters = $this->routeMatch->getParameters();
     foreach ($parameters as $parameter) {
       if ($parameter instanceof EntityInterface) {
         $tokens[$parameter->getEntityTypeId()] = $parameter;
       }
     }
 
-    $value = $token_service->replace($this->configuration['value'], $tokens);
+    $value = $this->token->replace($this->configuration['value'], $tokens);
 
     $build['barcode'] = [
       '#theme' => 'barcode__' . $suffix,
